@@ -3,7 +3,7 @@ using UnityEngine;
 public class Player_PreMoveState : EntityState
 {
     private float timer;
-    private float duration = 0.3f; // Short duration - adjust this to match your animation length
+    private float duration = 0.01f;
 
     public Player_PreMoveState(Player player, StateMachine stateMachine, string stateName)
         : base(player, stateMachine, stateName)
@@ -14,36 +14,36 @@ public class Player_PreMoveState : EntityState
     {
         base.Enter();
         player.SetVelocity(0, 0);
-        timer = 0f; // Reset timer
-        Debug.Log("ENTERED MOVEPRE - Timer Reset");
+        timer = 0f;
+        Debug.Log(">> MOVEPRE STATE - Starting wind-up animation");
     }
 
     public override void Update()
     {
         base.Update();
 
-        timer += Time.deltaTime;
-        Debug.Log($"MovePre Timer: {timer:F2} / {duration:F2}");
-
-        // If timer finished, go to Move state
-        if (timer >= duration)
+        // Cancel if input stops
+        if (player.moveInput.magnitude < 0.1f)
         {
-            Debug.Log("Timer DONE! Going to MOVE state");
-            stateMachine.ChangeState(player.moveState);
+            Debug.Log(">> Input cancelled -> BACK TO IDLE");
+            stateMachine.ChangeState(player.idleState);
+            anim.SetFloat("moveX", 0);
+            anim.SetFloat("moveY", 0);
             return;
         }
 
-        // If input stops, go back to idle
-        if (player.moveInput == Vector2.zero)
+        timer += Time.deltaTime;
+
+        // Transition to Move after duration
+        if (timer >= duration)
         {
-            Debug.Log("Input stopped! Going to IDLE");
-            stateMachine.ChangeState(player.idleState);
+            Debug.Log($">> Wind-up complete ({timer:F2}s) -> MOVE STATE");
+            stateMachine.ChangeState(player.moveState);
         }
     }
 
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("EXITED MOVEPRE");
     }
 }

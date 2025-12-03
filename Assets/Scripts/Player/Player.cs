@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     public Player_PreMoveState movePreState { get; private set; }
 
     public Vector2 moveInput { get; private set; }
-    public Vector2 lastDirection { get; private set; }
+    public Vector2 lastDirection { get; private set; } = Vector2.down;
 
     [Header("Movement Stats")]
     [SerializeField] public float moveSpeed = 1f;
@@ -64,13 +64,9 @@ public class Player : MonoBehaviour
             anim.SetFloat("moveY", normalizedInput.y);
             lastDirection = normalizedInput;
         }
-        else
-        {
-            anim.SetFloat("moveX", 0f);
-            anim.SetFloat("moveY", 0f);
-        }
+       
 
-        anim.SetFloat("lastDirX", lastDirection.x);
+            anim.SetFloat("lastDirX", lastDirection.x);
         anim.SetFloat("lastDirY", lastDirection.y);
         anim.SetFloat("speed", moveInput.magnitude);
     }

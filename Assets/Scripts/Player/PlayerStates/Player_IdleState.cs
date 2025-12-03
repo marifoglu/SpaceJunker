@@ -11,16 +11,16 @@ public class Player_IdleState : EntityState
     {
         base.Enter();
         player.SetVelocity(0, 0);
-        Debug.Log("Entered IDLE state");
+        Debug.Log(">> IDLE STATE");
     }
 
     public override void Update()
     {
         base.Update();
 
-        if (player.moveInput != Vector2.zero)
+        if (player.moveInput.magnitude > 0.1f)
         {
-            Debug.Log("Input detected, changing to MOVEPRE state");
+            Debug.Log($">> Input: {player.moveInput} -> SWITCHING TO MOVEPRE");
             stateMachine.ChangeState(player.movePreState);
         }
     }
@@ -28,6 +28,5 @@ public class Player_IdleState : EntityState
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("Exiting IDLE state");
     }
 }

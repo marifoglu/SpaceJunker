@@ -115,7 +115,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""2D Vector"",
                     ""id"": ""77bc2715-f528-4bb6-8d05-36e458ee3684"",
-                    ""path"": ""2DVector(mode=1)"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

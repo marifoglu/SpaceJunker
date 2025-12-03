@@ -10,28 +10,30 @@ public class Player_MoveState : EntityState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("ENTERED MOVE STATE");
+        Debug.Log(">> MOVE STATE - Player is moving");
     }
 
     public override void Update()
     {
         base.Update();
 
+        // Check for input stop FIRST
+        if (player.moveInput.magnitude < 0.1f)
+        {
+            Debug.Log(">> Movement stopped -> IDLE");
+            stateMachine.ChangeState(player.idleState);
+
+            return;
+        }
+
         // Apply movement
         Vector2 movement = player.moveInput.normalized * player.moveSpeed;
         player.SetVelocity(movement.x, movement.y);
-
-        // Return to idle if no input
-        if (player.moveInput == Vector2.zero)
-        {
-            Debug.Log("No input, going to IDLE");
-            stateMachine.ChangeState(player.idleState);
-        }
     }
 
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("EXITED MOVE STATE");
+        player.SetVelocity(0, 0);
     }
 }
