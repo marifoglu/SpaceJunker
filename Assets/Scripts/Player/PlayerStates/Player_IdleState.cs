@@ -21,7 +21,7 @@ public class Player_IdleState : EntityState
         if (player.moveInput != Vector2.zero)
         {
             Debug.Log("Input detected, changing to MOVEPRE state");
-            stateMachine.ChangeState(player.movePreState); // Changed to movePreState
+            stateMachine.ChangeState(player.movePreState);
         }
     }
 

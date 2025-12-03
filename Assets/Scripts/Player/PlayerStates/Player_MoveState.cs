@@ -10,7 +10,7 @@ public class Player_MoveState : EntityState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Entered MOVE state");
+        Debug.Log("ENTERED MOVE STATE");
     }
 
     public override void Update()
@@ -24,6 +24,7 @@ public class Player_MoveState : EntityState
         // Return to idle if no input
         if (player.moveInput == Vector2.zero)
         {
+            Debug.Log("No input, going to IDLE");
             stateMachine.ChangeState(player.idleState);
         }
     }
@@ -31,6 +32,6 @@ public class Player_MoveState : EntityState
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("Exiting MOVE state");
+        Debug.Log("EXITED MOVE STATE");
     }
 }

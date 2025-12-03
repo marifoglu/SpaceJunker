@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
@@ -10,11 +10,11 @@ public class Player : MonoBehaviour
     public Animator anim { get; private set; }
 
     public Player_IdleState idleState { get; private set; }
-    public Player_MoveState moveState { get; private set; }  // Added this
-    public Player_PreMoveState movePreState { get; private set; }  // Added this for pre-animation
+    public Player_MoveState moveState { get; private set; }
+    public Player_PreMoveState movePreState { get; private set; }
 
     public Vector2 moveInput { get; private set; }
-    public Vector2 lastDirection { get; private set; } = Vector2.down;
+    public Vector2 lastDirection { get; private set; }
 
     [Header("Movement Stats")]
     [SerializeField] public float moveSpeed = 1f;
@@ -28,9 +28,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         idleState = new Player_IdleState(this, stateMachine, "Idle");
-        moveState = new Player_MoveState(this, stateMachine, "Move");  // Initialize move state
-        movePreState = new Player_PreMoveState(this, stateMachine, "MovePre");  // Initialize pre-animation state
-
+        moveState = new Player_MoveState(this, stateMachine, "Move");
+        movePreState = new Player_PreMoveState(this, stateMachine, "MovePre");
     }
 
     private void OnEnable()
@@ -54,31 +53,23 @@ public class Player : MonoBehaviour
     {
         stateMachine.UpdateActiveState();
         UpdateAnimatorParameters();
-
-        // ADD THIS FOR DEBUGGING:
-        Debug.Log($"Current Animator State: {anim.GetCurrentAnimatorStateInfo(0).IsName("???")}");
-        Debug.Log($"Is in Idle: {anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")}");
-        Debug.Log($"Is in MovePre: {anim.GetCurrentAnimatorStateInfo(0).IsName("MovePre")}");
-        Debug.Log($"Is in Move: {anim.GetCurrentAnimatorStateInfo(0).IsName("Move")}");
-        Debug.Log($"Animator State Hash: {anim.GetCurrentAnimatorStateInfo(0).fullPathHash}");
-        Debug.Log($"Normalized Time: {anim.GetCurrentAnimatorStateInfo(0).normalizedTime}");
     }
 
     private void UpdateAnimatorParameters()
     {
-        // Feed direction to blend trees
         if (moveInput != Vector2.zero)
         {
-            // Normalize for diagonal movement
             Vector2 normalizedInput = moveInput.normalized;
             anim.SetFloat("moveX", normalizedInput.x);
             anim.SetFloat("moveY", normalizedInput.y);
-
-            // Store last direction for idle facing
             lastDirection = normalizedInput;
         }
+        else
+        {
+            anim.SetFloat("moveX", 0f);
+            anim.SetFloat("moveY", 0f);
+        }
 
-        // Always update lastDir for idle blend tree
         anim.SetFloat("lastDirX", lastDirection.x);
         anim.SetFloat("lastDirY", lastDirection.y);
         anim.SetFloat("speed", moveInput.magnitude);

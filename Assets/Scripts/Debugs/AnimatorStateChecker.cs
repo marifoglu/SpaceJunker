@@ -18,7 +18,7 @@ public class AnimatorStateChecker : MonoBehaviour
         Debug.Log("=== ANIMATOR PARAMETERS ===");
 
         // Check bools
-        string[] boolParams = { "Idle", "Move", "isPreAnimation", "MovePre" };
+        string[] boolParams = { "Idle", "Move","MovePre" };
         foreach (string param in boolParams)
         {
             if (HasParameter(param, AnimatorControllerParameterType.Bool))

@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class Player_PreMoveState : EntityState
 {
-
-    private float preAnimationTimer;
-    private readonly float preAnimationDuration = 0.5f; // INCREASE THIS! Make it 0.5 seconds
+    private float timer;
+    private float duration = 0.3f; // Short duration - adjust this to match your animation length
 
     public Player_PreMoveState(Player player, StateMachine stateMachine, string stateName)
         : base(player, stateMachine, stateName)
@@ -15,30 +14,29 @@ public class Player_PreMoveState : EntityState
     {
         base.Enter();
         player.SetVelocity(0, 0);
-        preAnimationTimer = preAnimationDuration; // RESET TIMER HERE
-        Debug.Log($"Entered MOVEPRE state | Timer: {preAnimationTimer}");
+        timer = 0f; // Reset timer
+        Debug.Log("ENTERED MOVEPRE - Timer Reset");
     }
 
     public override void Update()
     {
         base.Update();
 
-        // Debug the timer
-        Debug.Log($"MovePre Timer: {preAnimationTimer}");
+        timer += Time.deltaTime;
+        Debug.Log($"MovePre Timer: {timer:F2} / {duration:F2}");
 
-        preAnimationTimer -= Time.deltaTime;
-
-        // ADD THIS DEBUG TO SEE WHAT'S HAPPENING
-        if (preAnimationTimer <= 0)
+        // If timer finished, go to Move state
+        if (timer >= duration)
         {
-            Debug.Log($"MovePre Timer EXPIRED! Changing to Move state");
+            Debug.Log("Timer DONE! Going to MOVE state");
             stateMachine.ChangeState(player.moveState);
+            return;
         }
 
-        // Optional: Allow canceling back to idle if input stops
+        // If input stops, go back to idle
         if (player.moveInput == Vector2.zero)
         {
-            Debug.Log($"MovePre INPUT STOPPED! Changing to Idle state");
+            Debug.Log("Input stopped! Going to IDLE");
             stateMachine.ChangeState(player.idleState);
         }
     }
@@ -46,6 +44,6 @@ public class Player_PreMoveState : EntityState
     public override void Exit()
     {
         base.Exit();
-        Debug.Log("Exiting MOVEPRE state");
+        Debug.Log("EXITED MOVEPRE");
     }
 }
